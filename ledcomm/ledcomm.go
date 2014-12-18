@@ -34,4 +34,12 @@ func main() {
 	}
 
 	clear(strip)
+
+	for i := uint8(0); i < 60; i++ {
+		setRGB(strip, i, 50, 0, 0)
+		time.Sleep(5 * time.Millisecond)
+		flush(strip)
+		time.Sleep(10 * time.Millisecond)
+	}
+	flush(strip)
 }
