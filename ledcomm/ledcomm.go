@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-func setRGB(s io.ReadWriteCloser, index, r, g, b uint8) {
-	write(s, []byte{'s', r, g, b, index})
-}
-
 func setHSV(strip io.ReadWriteCloser, index uint8, h, s, v float64) {
 	c := colorful.Hsv(h, s, v)
 	setRGB(strip, index, uint8(c.R), uint8(c.G), uint8(c.B))
+}
+
+func setRGB(s io.ReadWriteCloser, index, r, g, b uint8) {
+	write(s, []byte{'s', r, g, b, index})
 }
 
 func clear(s io.ReadWriteCloser) {
