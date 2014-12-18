@@ -8,20 +8,24 @@ import (
 	"time"
 )
 
-func setHSV(strip io.ReadWriteCloser, index uint8, h, s, v float64) {
+// SetHSV will convert the HSV color to RGB and then send over serial
+func SetHSV(strip io.ReadWriteCloser, index uint8, h, s, v float64) {
 	c := colorful.Hsv(h, s, v)
-	setRGB(strip, index, uint8(c.R), uint8(c.G), uint8(c.B))
+	SetRGB(strip, index, uint8(c.R), uint8(c.G), uint8(c.B))
 }
 
-func setRGB(s io.ReadWriteCloser, index, r, g, b uint8) {
+// SetRGB will transfer the color to the correct index over serial
+func SetRGB(s io.ReadWriteCloser, index, r, g, b uint8) {
 	write(s, []byte{'s', r, g, b, index})
 }
 
-func clear(s io.ReadWriteCloser) {
+// Clear will send a clear signal over serial
+func Clear(s io.ReadWriteCloser) {
 	write(s, []byte{'c'})
 }
 
-func flush(s io.ReadWriteCloser) {
+// Flush will send a flush signal over serial
+func Flush(s io.ReadWriteCloser) {
 	write(s, []byte{'f'})
 }
 
@@ -32,7 +36,7 @@ func write(s io.ReadWriteCloser, data []byte) {
 	}
 }
 
-func setup() io.ReadWriteCloser {
+func Setup() io.ReadWriteCloser {
 	c := &serial.Config{Name: "/dev/ttyACM0", Baud: 115200}
 	strip, err := serial.OpenPort(c)
 	if err != nil {
@@ -42,15 +46,15 @@ func setup() io.ReadWriteCloser {
 }
 
 func demo() {
-	strip := setup()
+	strip := Setup()
 
-	clear(strip)
+	Clear(strip)
 
 	for i := uint8(0); i < 60; i++ {
-		setHSV(strip, i, float64(i*6), 1, 55)
+		SetHSV(strip, i, float64(i*6), 1, 55)
 		time.Sleep(5 * time.Millisecond)
-		flush(strip)
+		Flush(strip)
 		time.Sleep(10 * time.Millisecond)
 	}
-	flush(strip)
+	Flush(strip)
 }
