@@ -1,4 +1,4 @@
-package main
+package ledcomm
 
 import (
 	"github.com/lucasb-eyer/go-colorful"
