@@ -41,7 +41,7 @@ func setup() io.ReadWriteCloser {
 	return strip
 }
 
-func main() {
+func demo() {
 	strip := setup()
 
 	clear(strip)
