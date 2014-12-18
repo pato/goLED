@@ -64,9 +64,25 @@ void stripSerial() {
   ledStrip.write(colors, LED_COUNT);
 }
 
+void improvedSerial() {
+  uint8_t header = Serial.read();
+  if (header == 'f') {
+    ledStrip.write(colors, LED_COUNT);
+  } else if (header == 's') {
+    union stream_data data;
+    Serial.readBytes((char*)&data, 4);
+    colors[data.rgbd.index] = data.rgb;
+  } else if (header == 'c') {
+    for (int i = 0; i < LED_COUNT; i++) {
+       colors[i] = (rgb_color){0,0,0}; 
+    }
+    ledStrip.write(colors, LED_COUNT);
+  }
+}
+
 void loop()
 {
   if (Serial.available()){
-    stripSerial();
+    improvedSerial();
   }
 }
