@@ -36,6 +36,9 @@ func write(s io.ReadWriteCloser, data []byte) {
 	}
 }
 
+// Setup will initialize a serial connection to
+// /dev/ttyACM0 at buad 115200 and return an
+// io.ReadWriteCloser object to make further writes
 func Setup() io.ReadWriteCloser {
 	c := &serial.Config{Name: "/dev/ttyACM0", Baud: 115200}
 	strip, err := serial.OpenPort(c)
