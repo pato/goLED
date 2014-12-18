@@ -1,8 +1,9 @@
 package main
 
 import (
+	"github.com/BurntSushi/xgb"
 	led "github.com/pato/LEDserial/ledcomm"
-	"github.com/vova616/screenshot"
+	"github.com/pato/screenshot"
 	"image"
 	"io"
 	"time"
@@ -12,8 +13,8 @@ func toSimple(c uint32) uint8 {
 	return uint8(c / 257)
 }
 
-func process(strip io.ReadWriteCloser) {
-	img, err := screenshot.CaptureScreen()
+func process(xcon *xgb.Conn, strip io.ReadWriteCloser) {
+	img, err := screenshot.CaptureScreen(xcon)
 	if err != nil {
 		panic(err)
 	}
@@ -47,9 +48,15 @@ func extractColor(img *image.RGBA, start, width uint32) (uint8, uint8, uint8) {
 
 func main() {
 	strip := led.Setup()
+	xcon, err := screenshot.Setup()
+	if err != nil {
+		panic(err)
+	}
+	defer screenshot.Close(xcon)
+
 	led.Clear(strip)
 
 	for {
-		process(strip)
+		process(xcon, strip)
 	}
 }
