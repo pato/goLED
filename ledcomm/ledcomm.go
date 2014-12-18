@@ -32,17 +32,22 @@ func write(s io.ReadWriteCloser, data []byte) {
 	}
 }
 
-func main() {
+func setup() io.ReadWriteCloser {
 	c := &serial.Config{Name: "/dev/ttyACM0", Baud: 115200}
 	strip, err := serial.OpenPort(c)
 	if err != nil {
 		log.Fatal(err)
 	}
+	return strip
+}
+
+func main() {
+	strip := setup()
 
 	clear(strip)
 
 	for i := uint8(0); i < 60; i++ {
-		setHSV(strip, i, float64(i*6), 1, 255)
+		setHSV(strip, i, float64(i*6), 1, 55)
 		time.Sleep(5 * time.Millisecond)
 		flush(strip)
 		time.Sleep(10 * time.Millisecond)
