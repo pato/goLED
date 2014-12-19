@@ -7,6 +7,14 @@ import (
 	"log"
 )
 
+const BaudRate float64 = 115200
+const secondsPerBit = 1 / BaudRate
+const microsecondsPerBit = secondsPerBit * (1000000)
+const microsecondsPerByte = 8 * microsecondsPerBit
+const MsPerColor = microsecondsPerByte * 5
+const MsPerFlush = microsecondsPerByte
+const MsPerClear = microsecondsPerByte
+
 // SetHSV will convert the HSV color to RGB and then send over serial
 func SetHSV(strip io.ReadWriteCloser, index uint8, h, s, v float64) {
 	c := colorful.Hsv(h, s, v)
