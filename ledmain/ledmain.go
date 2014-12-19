@@ -27,13 +27,37 @@ func main() {
 	if *clear {
 		ledcomm.Clear(strip)
 	} else if *demo {
-		for i := uint8(0); i < 60; i++ {
-			ledcomm.SetHSV(strip, i, float64(i*6), 1, 55)
-			time.Sleep(2 * time.Millisecond)
-			ledcomm.Flush(strip)
-			time.Sleep(4 * time.Millisecond)
+		ledcomm.Clear(strip)
+		for {
+			for i := uint8(0); i < 60; i++ {
+				ledcomm.SetHSV(strip, i, float64(i*6), 1, 55)
+				time.Sleep(347 * time.Microsecond)
+				ledcomm.Flush(strip)
+				time.Sleep(4 * time.Millisecond)
+			}
+			time.Sleep(100 * time.Millisecond)
+			for i := uint8(0); i < 60; i++ {
+				ledcomm.SetRGB(strip, i, 0, 0, 0)
+				time.Sleep(347 * time.Microsecond)
+				ledcomm.Flush(strip)
+				time.Sleep(4 * time.Millisecond)
+			}
+			time.Sleep(100 * time.Millisecond)
+			for i := uint8(0); i < 60; i++ {
+				ledcomm.SetHSV(strip, 59-i, float64((59-i)*6), 1, 55)
+				time.Sleep(347 * time.Microsecond)
+				ledcomm.Flush(strip)
+				time.Sleep(4 * time.Millisecond)
+			}
+			time.Sleep(100 * time.Millisecond)
+			for i := uint8(0); i < 60; i++ {
+				ledcomm.SetRGB(strip, 59-i, 0, 0, 0)
+				time.Sleep(347 * time.Microsecond)
+				ledcomm.Flush(strip)
+				time.Sleep(4 * time.Millisecond)
+			}
+			time.Sleep(100 * time.Millisecond)
 		}
-		ledcomm.Flush(strip)
 	} else if *send {
 		if *r >= 0 && *g >= 0 && *b >= 0 {
 			ledcomm.SetRGB(strip, uint8(*i), uint8(*r), uint8(*g), uint8(*b))
