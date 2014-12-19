@@ -83,6 +83,33 @@ func demo3(strip io.ReadWriteCloser, brightness float64) {
 	}
 }
 
+func demo4(strip io.ReadWriteCloser, brightness float64) {
+	ledcomm.Clear(strip)
+	var color uint = 0
+	var colorStep uint = 20
+	for {
+		for col := uint8(60); col > 0; col-- {
+			for i := uint8(0); i < col; i++ {
+				ledcomm.SetHSV(strip, i, float64(color), 1, brightness)
+				if i == col-1 {
+					ledcomm.SetRGB(strip, i-4, 0, 0, 0)
+					ledcomm.SetRGB(strip, i-3, 0, 0, 0)
+					ledcomm.SetRGB(strip, i-2, 0, 0, 0)
+					ledcomm.SetRGB(strip, i-1, 0, 0, 0)
+				} else if i > 3 {
+					ledcomm.SetHSV(strip, i-4, float64(color), 0, 0)
+					ledcomm.SetHSV(strip, i-3, float64(color), 0.9, brightness*0.1)
+					ledcomm.SetHSV(strip, i-2, float64(color), 0.95, brightness*0.2)
+					ledcomm.SetHSV(strip, i-1, float64(color), 1, brightness*0.5)
+				}
+				ledcomm.Flush(strip)
+				time.Sleep(50 * time.Millisecond)
+				color = (color + colorStep) % 360
+			}
+		}
+	}
+}
+
 func main() {
 
 	clear := flag.Bool("clear", false, "clears the led strip")
@@ -112,6 +139,8 @@ func main() {
 			demo2(strip, *brightness)
 		case 3:
 			demo3(strip, *brightness)
+		case 4:
+			demo4(strip, *brightness)
 		}
 	} else if *send {
 		if *r >= 0 && *g >= 0 && *b >= 0 {
