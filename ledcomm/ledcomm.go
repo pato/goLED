@@ -5,6 +5,7 @@ import (
 	"github.com/tarm/goserial"
 	"io"
 	"log"
+	"time"
 )
 
 const BaudRate float64 = 115200
@@ -24,16 +25,19 @@ func SetHSV(strip io.ReadWriteCloser, index uint8, h, s, v float64) {
 // SetRGB will transfer the color to the correct index over serial
 func SetRGB(s io.ReadWriteCloser, index, r, g, b uint8) {
 	write(s, []byte{'s', r, g, b, index})
+	time.Sleep(347 * time.Microsecond)
 }
 
 // Clear will send a clear signal over serial
 func Clear(s io.ReadWriteCloser) {
 	write(s, []byte{'c'})
+	time.Sleep(69 * time.Microsecond)
 }
 
 // Flush will send a flush signal over serial
 func Flush(s io.ReadWriteCloser) {
 	write(s, []byte{'f'})
+	time.Sleep(2150 * time.Microsecond)
 }
 
 func write(s io.ReadWriteCloser, data []byte) {
