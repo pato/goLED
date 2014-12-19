@@ -6,7 +6,6 @@ import (
 	"github.com/pato/screenshot"
 	"image"
 	"io"
-	"time"
 )
 
 func toSimple(c uint32) uint8 {
@@ -24,10 +23,10 @@ func process(xcon *xgb.Conn, strip io.ReadWriteCloser) {
 	for i := 0; i < 60; i++ {
 		r, g, b := extractColor(img, uint32(i*bucketWidth), uint32(bucketWidth))
 		led.SetRGB(strip, uint8(i), r, g, b)
-		time.Sleep(1 * time.Millisecond)
+		//time.Sleep(1 * time.Millisecond)
 	}
 	led.Flush(strip)
-	time.Sleep(5 * time.Millisecond)
+	//time.Sleep(5 * time.Millisecond)
 }
 
 func extractColor(img *image.RGBA, start, width uint32) (uint8, uint8, uint8) {

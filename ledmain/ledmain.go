@@ -31,28 +31,24 @@ func main() {
 		for {
 			for i := uint8(0); i < 60; i++ {
 				ledcomm.SetHSV(strip, i, float64(i*6), 1, 55)
-				time.Sleep(347 * time.Microsecond)
 				ledcomm.Flush(strip)
 				time.Sleep(4 * time.Millisecond)
 			}
 			time.Sleep(100 * time.Millisecond)
 			for i := uint8(0); i < 60; i++ {
 				ledcomm.SetRGB(strip, i, 0, 0, 0)
-				time.Sleep(347 * time.Microsecond)
 				ledcomm.Flush(strip)
 				time.Sleep(4 * time.Millisecond)
 			}
 			time.Sleep(100 * time.Millisecond)
 			for i := uint8(0); i < 60; i++ {
 				ledcomm.SetHSV(strip, 59-i, float64((59-i)*6), 1, 55)
-				time.Sleep(347 * time.Microsecond)
 				ledcomm.Flush(strip)
 				time.Sleep(4 * time.Millisecond)
 			}
 			time.Sleep(100 * time.Millisecond)
 			for i := uint8(0); i < 60; i++ {
 				ledcomm.SetRGB(strip, 59-i, 0, 0, 0)
-				time.Sleep(347 * time.Microsecond)
 				ledcomm.Flush(strip)
 				time.Sleep(4 * time.Millisecond)
 			}
