@@ -5,7 +5,6 @@ import (
 	"github.com/tarm/goserial"
 	"io"
 	"log"
-	"time"
 )
 
 // SetHSV will convert the HSV color to RGB and then send over serial
@@ -37,27 +36,13 @@ func write(s io.ReadWriteCloser, data []byte) {
 }
 
 // Setup will initialize a serial connection to
-// /dev/ttyACM0 at buad 115200 and return an
+// specified port at buad 115200 and return an
 // io.ReadWriteCloser object to make further writes
-func Setup() io.ReadWriteCloser {
-	c := &serial.Config{Name: "/dev/ttyACM0", Baud: 115200}
+func Setup(name string) io.ReadWriteCloser {
+	c := &serial.Config{Name: name, Baud: 115200}
 	strip, err := serial.OpenPort(c)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return strip
-}
-
-func demo() {
-	strip := Setup()
-
-	Clear(strip)
-
-	for i := uint8(0); i < 60; i++ {
-		SetHSV(strip, i, float64(i*6), 1, 55)
-		time.Sleep(5 * time.Millisecond)
-		Flush(strip)
-		time.Sleep(10 * time.Millisecond)
-	}
-	Flush(strip)
 }
