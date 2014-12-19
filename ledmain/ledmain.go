@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-func demo1(strip io.ReadWriteCloser) {
+func demo1(strip io.ReadWriteCloser, brightness float64) {
 	ledcomm.Clear(strip)
 	for {
 		for i := uint8(0); i < 60; i++ {
-			ledcomm.SetHSV(strip, i, float64(i*6), 1, 55)
+			ledcomm.SetHSV(strip, i, float64(i*6), 1, brightness)
 			ledcomm.Flush(strip)
 			time.Sleep(4 * time.Millisecond)
 		}
@@ -24,7 +24,7 @@ func demo1(strip io.ReadWriteCloser) {
 		}
 		time.Sleep(100 * time.Millisecond)
 		for i := uint8(0); i < 60; i++ {
-			ledcomm.SetHSV(strip, 59-i, float64((59-i)*6), 1, 55)
+			ledcomm.SetHSV(strip, 59-i, float64((59-i)*6), 1, brightness)
 			ledcomm.Flush(strip)
 			time.Sleep(4 * time.Millisecond)
 		}
@@ -38,10 +38,9 @@ func demo1(strip io.ReadWriteCloser) {
 	}
 }
 
-func demo2(strip io.ReadWriteCloser) {
+func demo2(strip io.ReadWriteCloser, brightness float64) {
 	ledcomm.Clear(strip)
 	var color float64 = 0
-	var brightness float64 = 100
 	for {
 		for col := uint8(60); col > 0; col-- {
 			for i := uint8(0); i < col; i++ {
@@ -60,9 +59,8 @@ func demo2(strip io.ReadWriteCloser) {
 	}
 }
 
-func demo3(strip io.ReadWriteCloser) {
+func demo3(strip io.ReadWriteCloser, brightness float64) {
 	ledcomm.Clear(strip)
-	var brightness float64 = 100
 	var colorStep float64 = 60
 	var color float64 = 0
 	var pastColor float64 = 59
@@ -90,6 +88,7 @@ func main() {
 	clear := flag.Bool("clear", false, "clears the led strip")
 	demo := flag.Bool("demo", false, "run a basic demo that shows the color spectrum on the strip")
 	send := flag.Bool("send", false, "set to send either an rgb or hsv color to the strip")
+	brightness := flag.Float64("brightness", 100, "the maximum brightness in the demos [0-255]")
 	n := flag.Int("n", 1, "which demo to run (requires -demo)")
 	i := flag.Int("i", 0, "the led index")
 	r := flag.Int("r", -1, "the red value [0-255]")
@@ -108,11 +107,11 @@ func main() {
 	} else if *demo {
 		switch *n {
 		case 1:
-			demo1(strip)
+			demo1(strip, *brightness)
 		case 2:
-			demo2(strip)
+			demo2(strip, *brightness)
 		case 3:
-			demo3(strip)
+			demo3(strip, *brightness)
 		}
 	} else if *send {
 		if *r >= 0 && *g >= 0 && *b >= 0 {
