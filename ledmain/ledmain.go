@@ -127,7 +127,7 @@ func main() {
 
 	flag.Parse()
 
-	strip := ledcomm.Setup("/dev/ttyACM0")
+	strip := ledcomm.Setup("/dev/ttyACM1")
 
 	if *clear {
 		ledcomm.Clear(strip)

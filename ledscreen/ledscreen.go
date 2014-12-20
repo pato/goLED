@@ -46,7 +46,7 @@ func extractColor(img *image.RGBA, start, width uint32) (uint8, uint8, uint8) {
 }
 
 func main() {
-	strip := led.Setup("/dev/ttyACM0")
+	strip := led.Setup("/dev/ttyACM1")
 	xcon, err := screenshot.Setup()
 	if err != nil {
 		panic(err)
