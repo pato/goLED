@@ -10,6 +10,12 @@ typedef struct rgb_color_data{
   uint8_t index;
 } rgb_color_data;
 
+union stream_data {
+  rgb_color rgb;
+  rgb_color_data rgbd;
+};
+
+
 void setup() {
   Serial.begin(115200);
   Serial.println("Ready to receive colors."); 
