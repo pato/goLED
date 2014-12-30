@@ -10,6 +10,11 @@ import (
 	"time"
 )
 
+type Strip struct {
+	name   string
+	buffer io.ReadWriteCloser
+}
+
 const BaudRate float64 = 115200
 const secondsPerBit = 1 / BaudRate
 const microsecondsPerBit = secondsPerBit * (1000000)
@@ -19,26 +24,26 @@ const MsPerFlush = microsecondsPerByte
 const MsPerClear = microsecondsPerByte
 
 // SetHSV will convert the HSV color to RGB and then send over serial
-func SetHSV(strip io.ReadWriteCloser, index uint8, h, s, v float64) {
+func (strip Strip) SetHSV(index uint8, h, s, v float64) {
 	c := colorful.Hsv(h, s, v)
-	SetRGB(strip, index, uint8(c.R), uint8(c.G), uint8(c.B))
+	strip.SetRGB(index, uint8(c.R), uint8(c.G), uint8(c.B))
 }
 
 // SetRGB will transfer the color to the correct index over serial
-func SetRGB(s io.ReadWriteCloser, index, r, g, b uint8) {
-	write(s, []byte{'s', r, g, b, index})
+func (s Strip) SetRGB(index, r, g, b uint8) {
+	write(s.buffer, []byte{'s', r, g, b, index})
 	time.Sleep(347 * time.Microsecond)
 }
 
 // Clear will send a clear signal over serial
-func Clear(s io.ReadWriteCloser) {
-	write(s, []byte{'c'})
+func (s Strip) Clear() {
+	write(s.buffer, []byte{'c'})
 	time.Sleep(69 * time.Microsecond)
 }
 
 // Flush will send a flush signal over serial
-func Flush(s io.ReadWriteCloser) {
-	write(s, []byte{'f'})
+func (s Strip) Flush() {
+	write(s.buffer, []byte{'f'})
 	time.Sleep(2150 * time.Microsecond)
 }
 
@@ -65,20 +70,15 @@ func ttyName() string {
 	return ""
 }
 
-// SetupManual will initialize a serial connection to
-// specified port at buad 115200 and return an
-// io.ReadWriteCloser object to make further writes
-func SetupManual(name string) io.ReadWriteCloser {
+func OpenManual(name string) Strip {
 	c := &serial.Config{Name: name, Baud: 115200}
-	strip, err := serial.OpenPort(c)
+	buffer, err := serial.OpenPort(c)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return strip
+	return Strip{name, buffer}
 }
 
-// Setup will try to find the correct serial connection
-// and then initialize the connection
-func Setup() io.ReadWriteCloser {
-	return SetupManual(ttyName())
+func Open() Strip {
+	return OpenManual(ttyName())
 }
