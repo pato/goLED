@@ -2,17 +2,16 @@ package main
 
 import (
 	"github.com/BurntSushi/xgb"
-	led "github.com/pato/LEDserial/ledcomm"
+	"github.com/pato/LEDserial/ledcomm"
 	"github.com/pato/screenshot"
 	"image"
-	"io"
 )
 
 func toSimple(c uint32) uint8 {
 	return uint8(c / 257)
 }
 
-func process(xcon *xgb.Conn, strip io.ReadWriteCloser) {
+func process(xcon *xgb.Conn, strip ledcomm.Strip) {
 	img, err := screenshot.CaptureScreen(xcon)
 	if err != nil {
 		panic(err)
@@ -22,9 +21,9 @@ func process(xcon *xgb.Conn, strip io.ReadWriteCloser) {
 
 	for i := 0; i < 60; i++ {
 		r, g, b := extractColor(img, uint32(i*bucketWidth), uint32(bucketWidth))
-		led.SetRGB(strip, uint8(i), r, g, b)
+		strip.SetRGB(uint8(i), r, g, b)
 	}
-	led.Flush(strip)
+	strip.Flush()
 }
 
 func extractColor(img *image.RGBA, start, width uint32) (uint8, uint8, uint8) {
@@ -44,14 +43,14 @@ func extractColor(img *image.RGBA, start, width uint32) (uint8, uint8, uint8) {
 }
 
 func main() {
-	strip := led.Setup()
+	strip := ledcomm.Open()
 	xcon, err := screenshot.Setup()
 	if err != nil {
 		panic(err)
 	}
 	defer screenshot.Close(xcon)
 
-	led.Clear(strip)
+	strip.Clear()
 
 	for {
 		process(xcon, strip)
