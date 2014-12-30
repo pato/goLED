@@ -4,7 +4,9 @@ import (
 	"github.com/lucasb-eyer/go-colorful"
 	"github.com/tarm/goserial"
 	"io"
+	"io/ioutil"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -47,14 +49,36 @@ func write(s io.ReadWriteCloser, data []byte) {
 	}
 }
 
-// Setup will initialize a serial connection to
+func ttyName() string {
+	dev, err := ioutil.ReadDir("/dev")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range dev {
+		if strings.Contains(file.Name(), "ttyACM") {
+			return "/dev/" + file.Name()
+		}
+	}
+
+	log.Fatal("Could not find an appropriate tty connection")
+	return ""
+}
+
+// SetupManual will initialize a serial connection to
 // specified port at buad 115200 and return an
 // io.ReadWriteCloser object to make further writes
-func Setup(name string) io.ReadWriteCloser {
+func SetupManual(name string) io.ReadWriteCloser {
 	c := &serial.Config{Name: name, Baud: 115200}
 	strip, err := serial.OpenPort(c)
 	if err != nil {
 		log.Fatal(err)
 	}
 	return strip
+}
+
+// Setup will try to find the correct serial connection
+// and then initialize the connection
+func Setup() io.ReadWriteCloser {
+	return SetupManual(ttyName())
 }
