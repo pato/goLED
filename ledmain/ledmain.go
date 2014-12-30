@@ -4,51 +4,50 @@ import (
 	"flag"
 	"fmt"
 	"github.com/pato/LEDserial/ledcomm"
-	"io"
 	"time"
 )
 
-func demo1(strip io.ReadWriteCloser, brightness float64) {
-	ledcomm.Clear(strip)
+func demo1(strip ledcomm.Strip, brightness float64) {
+	strip.Clear()
 	for {
 		for i := uint8(0); i < 60; i++ {
-			ledcomm.SetHSV(strip, i, float64(i*6), 1, brightness)
-			ledcomm.Flush(strip)
+			strip.SetHSV(i, float64(i*6), 1, brightness)
+			strip.Flush()
 			time.Sleep(4 * time.Millisecond)
 		}
 		time.Sleep(100 * time.Millisecond)
 		for i := uint8(0); i < 60; i++ {
-			ledcomm.SetRGB(strip, i, 0, 0, 0)
-			ledcomm.Flush(strip)
+			strip.SetRGB(i, 0, 0, 0)
+			strip.Flush()
 			time.Sleep(4 * time.Millisecond)
 		}
 		time.Sleep(100 * time.Millisecond)
 		for i := uint8(0); i < 60; i++ {
-			ledcomm.SetHSV(strip, 59-i, float64((59-i)*6), 1, brightness)
-			ledcomm.Flush(strip)
+			strip.SetHSV(59-i, float64((59-i)*6), 1, brightness)
+			strip.Flush()
 			time.Sleep(4 * time.Millisecond)
 		}
 		time.Sleep(100 * time.Millisecond)
 		for i := uint8(0); i < 60; i++ {
-			ledcomm.SetRGB(strip, 59-i, 0, 0, 0)
-			ledcomm.Flush(strip)
+			strip.SetRGB(59-i, 0, 0, 0)
+			strip.Flush()
 			time.Sleep(4 * time.Millisecond)
 		}
 		time.Sleep(100 * time.Millisecond)
 	}
 }
 
-func demo2(strip io.ReadWriteCloser, brightness float64) {
-	ledcomm.Clear(strip)
+func demo2(strip ledcomm.Strip, brightness float64) {
+	strip.Clear()
 	var color float64 = 0
 	for {
 		for col := uint8(60); col > 0; col-- {
 			for i := uint8(0); i < col; i++ {
-				ledcomm.SetHSV(strip, i, color, 1, brightness)
+				strip.SetHSV(i, color, 1, brightness)
 				if i > 0 {
-					ledcomm.SetRGB(strip, i-1, 0, 0, 0)
+					strip.SetRGB(i-1, 0, 0, 0)
 				}
-				ledcomm.Flush(strip)
+				strip.Flush()
 				time.Sleep(4 * time.Millisecond)
 			}
 		}
@@ -59,19 +58,19 @@ func demo2(strip io.ReadWriteCloser, brightness float64) {
 	}
 }
 
-func demo3(strip io.ReadWriteCloser, brightness float64) {
-	ledcomm.Clear(strip)
+func demo3(strip ledcomm.Strip, brightness float64) {
+	strip.Clear()
 	var colorStep float64 = 60
 	var color float64 = 0
 	var pastColor float64 = 59
 	for {
 		for col := uint8(60); col > 0; col-- {
 			for i := uint8(0); i < col; i++ {
-				ledcomm.SetHSV(strip, i, color, 1, brightness)
+				strip.SetHSV(i, color, 1, brightness)
 				if i > 0 {
-					ledcomm.SetHSV(strip, i-1, pastColor, 1, brightness)
+					strip.SetHSV(i-1, pastColor, 1, brightness)
 				}
-				ledcomm.Flush(strip)
+				strip.Flush()
 				time.Sleep(10 * time.Millisecond)
 			}
 		}
@@ -83,26 +82,26 @@ func demo3(strip io.ReadWriteCloser, brightness float64) {
 	}
 }
 
-func demo4(strip io.ReadWriteCloser, brightness float64) {
-	ledcomm.Clear(strip)
+func demo4(strip ledcomm.Strip, brightness float64) {
+	strip.Clear()
 	var color uint = 0
 	var colorStep uint = 20
 	for {
 		for col := uint8(60); col > 0; col-- {
 			for i := uint8(0); i < col; i++ {
-				ledcomm.SetHSV(strip, i, float64(color), 1, brightness)
+				strip.SetHSV(i, float64(color), 1, brightness)
 				if i == col-1 {
-					ledcomm.SetRGB(strip, i-4, 0, 0, 0)
-					ledcomm.SetRGB(strip, i-3, 0, 0, 0)
-					ledcomm.SetRGB(strip, i-2, 0, 0, 0)
-					ledcomm.SetRGB(strip, i-1, 0, 0, 0)
+					strip.SetRGB(i-4, 0, 0, 0)
+					strip.SetRGB(i-3, 0, 0, 0)
+					strip.SetRGB(i-2, 0, 0, 0)
+					strip.SetRGB(i-1, 0, 0, 0)
 				} else if i > 3 {
-					ledcomm.SetHSV(strip, i-4, float64(color), 0, 0)
-					ledcomm.SetHSV(strip, i-3, float64(color), 0.9, brightness*0.1)
-					ledcomm.SetHSV(strip, i-2, float64(color), 0.95, brightness*0.2)
-					ledcomm.SetHSV(strip, i-1, float64(color), 1, brightness*0.5)
+					strip.SetHSV(i-4, float64(color), 0, 0)
+					strip.SetHSV(i-3, float64(color), 0.9, brightness*0.1)
+					strip.SetHSV(i-2, float64(color), 0.95, brightness*0.2)
+					strip.SetHSV(i-1, float64(color), 1, brightness*0.5)
 				}
-				ledcomm.Flush(strip)
+				strip.Flush()
 				time.Sleep(50 * time.Millisecond)
 				color = (color + colorStep) % 360
 			}
@@ -127,10 +126,10 @@ func main() {
 
 	flag.Parse()
 
-	strip := ledcomm.Setup()
+	strip := ledcomm.Open()
 
 	if *clear {
-		ledcomm.Clear(strip)
+		strip.Clear()
 	} else if *demo {
 		switch *n {
 		case 1:
@@ -144,13 +143,13 @@ func main() {
 		}
 	} else if *send {
 		if *r >= 0 && *g >= 0 && *b >= 0 {
-			ledcomm.SetRGB(strip, uint8(*i), uint8(*r), uint8(*g), uint8(*b))
+			strip.SetRGB(uint8(*i), uint8(*r), uint8(*g), uint8(*b))
 		} else if *h >= 0 && *s >= 0 && *v >= 0 {
-			ledcomm.SetHSV(strip, uint8(*i), *h, *s, *v)
+			strip.SetHSV(uint8(*i), *h, *s, *v)
 		} else {
 			fmt.Printf("RGB or HSV need to be specified. See ledmain -help for usage\n")
 		}
-		ledcomm.Flush(strip)
+		strip.Flush()
 	} else {
 		flag.Usage()
 	}
