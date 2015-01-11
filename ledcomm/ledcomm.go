@@ -19,9 +19,9 @@ const BaudRate float64 = 115200
 const secondsPerBit = 1 / BaudRate
 const microsecondsPerBit = secondsPerBit * (1000000)
 const microsecondsPerByte = 8 * microsecondsPerBit
-const MsPerColor = microsecondsPerByte * 5
-const MsPerFlush = microsecondsPerByte
-const MsPerClear = microsecondsPerByte
+const msPerColor = microsecondsPerByte * 5
+const msPerFlush = microsecondsPerByte
+const msPerClear = microsecondsPerByte
 
 // SetHSV will convert the HSV color to RGB and then send over serial
 func (strip Strip) SetHSV(index uint8, h, s, v float64) {

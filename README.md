@@ -8,4 +8,3 @@ Organized as follows
 * ledmain - sample client for controlling led strip, includes demos
 * ledscreen - sample client that projects the screen colors on the led strip
 
-
