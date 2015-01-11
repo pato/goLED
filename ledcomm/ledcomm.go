@@ -70,6 +70,7 @@ func ttyName() string {
 	return ""
 }
 
+// OpenManual will open the desired tty connection and return a strip connection
 func OpenManual(name string) Strip {
 	c := &serial.Config{Name: name, Baud: 115200}
 	buffer, err := serial.OpenPort(c)
@@ -79,6 +80,7 @@ func OpenManual(name string) Strip {
 	return Strip{name, buffer}
 }
 
+// Open will find an appropriate tty and return a strip connection
 func Open() Strip {
 	return OpenManual(ttyName())
 }
