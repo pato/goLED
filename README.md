@@ -1,4 +1,5 @@
-# LEDSerial - Collection of software for communicating with and controlling individually addressable LED strips
+# LEDSerial
+### Collection of software for communicating with and controlling individually addressable LED strips
 
 Organized as follows
 
