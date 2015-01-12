@@ -32,7 +32,7 @@ and supports three commands which are remotely called through a raw serial buffe
 `s|r|g|b|i` - 5 byte command update a single led in the internal representation. r,g,b,i are 8bit values which
 represent the red, green, blue components of the color, and the led index in strip.
 
-In uses the [PololuLedStrip](https://github.com/pololu/pololu-led-strip-arduino) library for communicating with the
+It uses the [PololuLedStrip](https://github.com/pololu/pololu-led-strip-arduino) library for communicating with the
 LED strip.
 
 The arduino software makes no guarantees about timing or integrity, it plainly read and executes.
