@@ -41,6 +41,25 @@ The arduino software makes no guarantees about timing or integrity, it plainly r
 
 Golang library for communicating with the arduino
 
+Import library
+
+    import "github.com/pato/LEDserial/ledcomm
+
+Opening connection with arduino slave
+
+    strip := ledcomm.Open()
+
+Clearing the strip
+
+    strip.Clear()
+
+Sending colors
+
+    strip.SetRGB(10, 255, 255, 255)
+    strip.SetHSV(10, 359, 1, 255)
+    strip.Flush()
+
+
 ### ledmain
 
 Golang client demo of ledcomm libraries. Can be used to send individual commands to strip
