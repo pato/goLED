@@ -145,7 +145,7 @@ func main() {
 	clear := flag.Bool("clear", false, "clears the led strip")
 	demo := flag.Bool("demo", false, "run a basic demo that shows the color spectrum on the strip")
 	send := flag.Bool("send", false, "set to send either an rgb or hsv color to the strip")
-	brightness := flag.Float64("brightness", 100, "the maximum brightness in the demos [0-255]")
+	brightness := flag.Float64("brightness", 255, "the maximum brightness in the demos [0-255]")
 	n := flag.Int("n", 1, "which demo to run (requires -demo)")
 	i := flag.Int("i", -1, "the led index (or all leds if no index given)")
 	r := flag.Int("r", -1, "the red value [0-255]")
