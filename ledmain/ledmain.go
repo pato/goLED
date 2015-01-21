@@ -84,6 +84,9 @@ func demo3(strip ledcomm.Strip, brightness float64) {
 
 func demo4(strip ledcomm.Strip, brightness float64) {
 	strip.Clear()
+	for i := uint8(0); i < 60; i++ {
+		strip.SetRGB(i, 255, 0, 0)
+	}
 	var color uint = 0
 	var colorStep uint = 20
 	for {
@@ -106,6 +109,34 @@ func demo4(strip ledcomm.Strip, brightness float64) {
 				color = (color + colorStep) % 360
 			}
 		}
+	}
+}
+
+func demo5(strip ledcomm.Strip, brightness float64) {
+	strip.Clear()
+	for {
+		for color := 0; color < 360; color++ {
+			setStripHSV(strip, float64(color), 1, brightness)
+			strip.Flush()
+			time.Sleep(50 * time.Millisecond)
+		}
+		for color := 359; color >= 0; color-- {
+			setStripHSV(strip, float64(color), 1, brightness)
+			strip.Flush()
+			time.Sleep(50 * time.Millisecond)
+		}
+	}
+}
+
+func setStripRGB(strip ledcomm.Strip, r, g, b uint8) {
+	for led := uint8(0); led < 60; led++ {
+		strip.SetRGB(led, r, g, b)
+	}
+}
+
+func setStripHSV(strip ledcomm.Strip, h, s, v float64) {
+	for led := uint8(0); led < 60; led++ {
+		strip.SetHSV(led, h, s, v)
 	}
 }
 
@@ -140,6 +171,8 @@ func main() {
 			demo3(strip, *brightness)
 		case 4:
 			demo4(strip, *brightness)
+		case 5:
+			demo5(strip, *brightness)
 		}
 	} else if *send {
 		if *r >= 0 && *g >= 0 && *b >= 0 {
