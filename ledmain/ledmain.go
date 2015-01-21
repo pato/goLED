@@ -147,7 +147,7 @@ func main() {
 	send := flag.Bool("send", false, "set to send either an rgb or hsv color to the strip")
 	brightness := flag.Float64("brightness", 100, "the maximum brightness in the demos [0-255]")
 	n := flag.Int("n", 1, "which demo to run (requires -demo)")
-	i := flag.Int("i", 0, "the led index")
+	i := flag.Int("i", -1, "the led index (or all leds if no index given)")
 	r := flag.Int("r", -1, "the red value [0-255]")
 	g := flag.Int("g", -1, "the green value [0-255]")
 	b := flag.Int("b", -1, "the blue value [0-255]")
@@ -158,6 +158,8 @@ func main() {
 	flag.Parse()
 
 	strip := ledcomm.Open()
+
+	time.Sleep(150 * time.Millisecond)
 
 	if *clear {
 		strip.Clear()
@@ -176,9 +178,21 @@ func main() {
 		}
 	} else if *send {
 		if *r >= 0 && *g >= 0 && *b >= 0 {
-			strip.SetRGB(uint8(*i), uint8(*r), uint8(*g), uint8(*b))
+			if *i >= 0 {
+				strip.SetRGB(uint8(*i), uint8(*r), uint8(*g), uint8(*b))
+			} else {
+				for l := uint8(0); l < 60; l++ {
+					strip.SetRGB(l, uint8(*r), uint8(*g), uint8(*b))
+				}
+			}
 		} else if *h >= 0 && *s >= 0 && *v >= 0 {
-			strip.SetHSV(uint8(*i), *h, *s, *v)
+			if *i >= 0 {
+				strip.SetHSV(uint8(*i), *h, *s, *v)
+			} else {
+				for l := uint8(0); l < 60; l++ {
+					strip.SetHSV(l, *h, *s, *v)
+				}
+			}
 		} else {
 			fmt.Printf("RGB or HSV need to be specified. See ledmain -help for usage\n")
 		}
@@ -186,5 +200,4 @@ func main() {
 	} else {
 		flag.Usage()
 	}
-
 }
