@@ -1,5 +1,5 @@
-# LEDSerial
-### Collection of software for communicating with and controlling individually addressable LED strips
+# goLED
+### Collection of software for communicating with and controlling individually addressable LED strips written in golang
 
 Organized as follows
 
