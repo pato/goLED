@@ -7,6 +7,9 @@ import (
 	"time"
 )
 
+type Hertz float64
+type BPM float64
+
 func demo1(strip ledcomm.Strip, brightness float64) {
 	strip.Clear()
 	for {
@@ -139,6 +142,34 @@ func demo6(strip ledcomm.Strip, brightness float64) {
 	}
 }
 
+func demo7(strip ledcomm.Strip, brightness float64) {
+	strip.Clear()
+	for {
+		for color := 0; color < 360; color += 30 {
+			sendHSVFromMiddle(strip, float64(color), 1, brightness, bpmToFrequency(120))
+		}
+	}
+}
+
+func sendHSVFromMiddle(strip ledcomm.Strip, h, s, brightness float64, frequency Hertz) {
+	leds := uint8(60)
+	half := leds / 2
+	for i := uint8(0); i < 30; i++ {
+		strip.SetHSV(half-i, h, s, brightness)
+		strip.SetHSV(half+i, h, s, brightness)
+		strip.Flush()
+		time.Sleep(frequencyToDelay(30, frequency))
+	}
+}
+
+func bpmToFrequency(bpm BPM) Hertz {
+	return Hertz(bpm / 60.0)
+}
+
+func frequencyToDelay(leds uint, frequency Hertz) time.Duration {
+	return time.Millisecond * time.Duration((float64(1000.0) / float64(frequency) / float64(leds)))
+}
+
 func setStripRGB(strip ledcomm.Strip, r, g, b uint8) {
 	for led := uint8(0); led < 60; led++ {
 		strip.SetRGB(led, r, g, b)
@@ -166,6 +197,8 @@ func main() {
 	s := flag.Float64("s", -1, "the saturation [0-1]")
 	v := flag.Float64("v", -1, "the value [0-255]")
 
+	fmt.Printf("bpmToFrequencyToDelay(120) = %s\n", frequencyToDelay(30, bpmToFrequency(120)))
+
 	flag.Parse()
 
 	strip := ledcomm.Open()
@@ -188,7 +221,10 @@ func main() {
 			demo5(strip, *brightness)
 		case 6:
 			demo6(strip, *brightness)
+		case 7:
+			demo7(strip, *brightness)
 		}
+
 	} else if *send {
 		if *r >= 0 && *g >= 0 && *b >= 0 {
 			if *i >= 0 {
