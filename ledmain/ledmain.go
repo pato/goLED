@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/pato/LEDserial/ledcomm"
+	"github.com/pato/goLED/ledcomm"
 	"time"
 )
 

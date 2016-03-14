@@ -2,7 +2,7 @@ package main
 
 import (
 	"github.com/BurntSushi/xgb"
-	"github.com/pato/LEDserial/ledcomm"
+	"github.com/pato/goLED/ledcomm"
 	"github.com/pato/screenshot"
 	"image"
 )
