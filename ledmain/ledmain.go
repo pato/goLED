@@ -145,8 +145,8 @@ func demo6(strip ledcomm.Strip, brightness float64) {
 func demo7(strip ledcomm.Strip, brightness float64) {
 	strip.Clear()
 	for {
-		for color := 0; color < 360; color += 30 {
-			sendHSVFromMiddle(strip, float64(color), 1, brightness, bpmToFrequency(120))
+		for color := 0; color < 360; color += 60 {
+			sendHSVFromMiddle(strip, float64(color), 1, brightness, bpmToFrequency(140))
 		}
 	}
 }
@@ -206,7 +206,9 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	if *clear {
-		strip.Clear()
+		for i := 0; i < 10000; i++ {
+			strip.Clear()
+		}
 	} else if *demo {
 		switch *n {
 		case 1:
