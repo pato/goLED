@@ -63,6 +63,8 @@ func ttyName() string {
 	for _, file := range dev {
 		if strings.Contains(file.Name(), "ttyACM") ||
 			strings.Contains(file.Name(), "ttyUSB") ||
+			strings.Contains(file.Name(), "arduino") ||
+			strings.Contains(file.Name(), "metromini") ||
 			strings.Contains(file.Name(), "tty.usbmodem") ||
 			strings.Contains(file.Name(), "tty.usbserial") {
 			return "/dev/" + file.Name()
